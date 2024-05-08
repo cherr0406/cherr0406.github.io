@@ -1,9 +1,10 @@
 :root {
-  --width: 70vw;
+  --width: 75vw;
   --min-width: 1100px;
   --icon-size: 50px;
   --border-radius: 15px;
-  --border-between: 15px;
+  --border-between: 10px;
+  --stripe-width: 45px;
   --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono", "Roboto Mono",
     "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro", "Fira Mono", "Droid Sans Mono",
     "Courier New", monospace;
@@ -47,7 +48,24 @@ body {
 
 body {
   color: var(--primary-text);
-  background: var(--background);
+  background-image: repeating-linear-gradient(
+    /* 45, 20, 55, 30, 20, 20, 50 */
+    90deg,
+    var(--light-primary),
+    var(--light-primary) 45px,
+    var(--primary) 45px,
+    var(--primary) 65px,
+    var(--light-primary) 65px,
+    var(--light-primary) 120px,
+    var(--background) 120px,
+    var(--background) 150px,
+    var(--light-primary) 150px,
+    var(--light-primary) 170px,
+    var(--accent) 170px,
+    var(--accent) 190px,
+    var(--light-primary) 190px,
+    var(--light-primary) 240px
+  );
 }
 
 main {

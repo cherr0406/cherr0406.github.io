@@ -56,9 +56,9 @@
 
 .navLine {
   position: relative;
-  width: 2px;
+  width: 5px;
   height: 2rem;
-  background-color: var(--divider);
+  background-color: var(--secondary-text);
   margin: 0 auto;
   z-index: -2;
 }
@@ -68,9 +68,9 @@
 
 .hangingLine {
   position: absolute;
-  width: 2px;
+  width: 5px;
   height: 50vh;
-  background-color: var(--divider);
+  background-color: var(--secondary-text);
   margin: -50vh auto;
   z-index: -1;
 }
