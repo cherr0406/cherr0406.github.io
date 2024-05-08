@@ -4,6 +4,7 @@ import Navigation from "./components/navigation";
 import Footer from "./components/footer";
 import "./globals.css";
 import { SITE_MAP, SITE_NAME } from "./data/const";
+import { useState } from "react";
 
 const nunitoSans = Nunito_Sans({
   preload: false,

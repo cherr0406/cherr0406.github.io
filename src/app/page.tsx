@@ -55,7 +55,9 @@ export default function Home() {
         </div>
       </div>
       <div className={styles.description}>
-        <h1>Cherr&apos;s website</h1>
+        <h1 className={styles.title}>
+          <div className={styles.titleLine}></div>Cherr&apos;s website
+        </h1>
         <p>
           A student majoring in computer engineering. <br />
           I&apos;m interested in software engineering, web developing and machine learning.
@@ -63,6 +65,12 @@ export default function Home() {
         <p>
           <Link href="#profile">Detail profile</Link>
         </p>
+        <div className={styles.update}>
+          <h3>Update</h3>
+          <ul>
+            <li>2024.05.07: Opened this website</li>
+          </ul>
+        </div>
       </div>
     </div>
   );

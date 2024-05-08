@@ -7,6 +7,7 @@ import { useState, useEffect, useRef } from "react";
 export default function Navigation() {
   const [currentSection, setCurrentSection] = useState(0);
   const [sectionPositions, setSectionPositions] = useState([{}]);
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   useEffect(() => {
     const sections = document.querySelectorAll("section");
@@ -30,19 +31,43 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const toggleNav = () => {
+    setIsNavOpen(!isNavOpen);
+  };
+
+  const closeNav = () => {
+    setIsNavOpen(false);
+  };
+
   return (
-    <nav className={styles.nav}>
-      <div className={styles.hangingLine}></div>
-      {Object.values(SITE_MAP).map((site, index) => (
-        <div key={index}>
-          <Link href={site.path} key={index}>
-            <div className={styles.navLink + (currentSection === index ? ` ${styles.active}` : "")}>
-              {site.name}
-            </div>
-          </Link>
-          {index !== Object.values(SITE_MAP).length - 1 && <div className={styles.navLine}></div>}
+    <>
+      <div className={styles.openBtn + (isNavOpen ? ` ${styles.open}` : "")} onClick={toggleNav}>
+        MENU
+      </div>
+      <nav id="nav" className={styles.nav + (isNavOpen ? ` ${styles.open}` : "")}>
+        <div className={styles.hangingLine}></div>
+        {Object.values(SITE_MAP).map((site, index) => (
+          <>
+            <Link href={site.path} key={index}>
+              <div
+                className={styles.navLink + (currentSection === index ? ` ${styles.active}` : "")}
+              >
+                {site.name}
+              </div>
+            </Link>
+            <div
+              className={
+                styles.navLine +
+                (index == Object.values(SITE_MAP).length - 1 ? ` ${styles.last}` : "")
+              }
+              key={index}
+            ></div>
+          </>
+        ))}
+        <div className={`${styles.navLink} ${styles.closeBtn}`} onClick={closeNav}>
+          CLOSE
         </div>
-      ))}
-    </nav>
+      </nav>
+    </>
   );
 }
