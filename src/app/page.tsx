@@ -55,7 +55,9 @@ export default function Home() {
         </div>
       </div>
       <div className={styles.description}>
-        <h1>Cherr&apos;s website</h1>
+        <h1 className={styles.title}>
+          <div className={styles.titleLine}></div>Cherr&apos;s website
+        </h1>
         <p>
           A student majoring in computer engineering. <br />
           I&apos;m interested in software engineering, web developing and machine learning.
