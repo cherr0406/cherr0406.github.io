@@ -88,8 +88,9 @@
 }
 .description a {
   font-size: 1.2rem;
-  text-decoration: underline;
-  color: var(--secondary-text);
+}
+.update ul {
+  list-style-type: none;
 }
 
 /* Enable hover only on non-touch devices */
