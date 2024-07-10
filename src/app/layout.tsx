@@ -7,10 +7,16 @@ import { SITE_MAP, SITE_NAME } from "./data/const";
 import { useState } from "react";
 
 const nunitoSans = Nunito_Sans({
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
   preload: false,
+  display: "swap",
 });
 const notoSansJP = Noto_Sans_JP({
+  weight: ["400", "700"],
+  style: ["normal"],
   preload: false,
+  display: "swap",
 });
 
 export const metadata: Metadata = {
