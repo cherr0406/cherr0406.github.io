@@ -1,4 +1,5 @@
 "use client";
+import React from "react";
 import Link from "next/link";
 import styles from "./components.module.css";
 import { SITE_MAP } from "../data/const";
@@ -47,8 +48,8 @@ export default function Navigation() {
       <nav id="nav" className={styles.nav + (isNavOpen ? ` ${styles.open}` : "")}>
         <div className={styles.hangingLine}></div>
         {Object.values(SITE_MAP).map((site, index) => (
-          <>
-            <Link href={site.path} key={index}>
+          <React.Fragment key={index}>
+            <Link href={site.path}>
               <div
                 className={styles.navLink + (currentSection === index ? ` ${styles.active}` : "")}
               >
@@ -60,9 +61,8 @@ export default function Navigation() {
                 styles.navLine +
                 (index == Object.values(SITE_MAP).length - 1 ? ` ${styles.last}` : "")
               }
-              key={index}
             ></div>
-          </>
+          </React.Fragment>
         ))}
         <div className={`${styles.navLink} ${styles.closeBtn}`} onClick={closeNav}>
           CLOSE
