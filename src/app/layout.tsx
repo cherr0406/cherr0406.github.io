@@ -11,6 +11,7 @@ const nunitoSans = Nunito_Sans({
   style: ["normal", "italic"],
   preload: false,
   display: "swap",
+  adjustFontFallback: false,
 });
 const notoSansJP = Noto_Sans_JP({
   weight: ["400", "700"],
