@@ -49,7 +49,12 @@ jobs:
           export IS_PREVIEW=true
           export PR_NUMBER=${{ github.event.pull_request.number }}
           bunx next build
-      - uses: actions/checkout@v4
+      - name: "Debug"
+        run: |
+          ls -la
+          ls -la out
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
         with:
           ref: gh-pages
       - name: Commit changes to gh-pages branch
