@@ -3,6 +3,8 @@ name: Deploy PR previews
 on:
   pull_request:
     types: [opened, synchronize, reopened]
+  pull_request_target:
+    types: [closed]
 
 permissions:
   contents: write
@@ -10,15 +12,15 @@ permissions:
   deployments: write
 
 concurrency:
-  group: pr-${{ github.ref }}
+  group: pr-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 env:
   PAGE_DIR: pr-preview-${{ github.event.pull_request.number }}
 
 jobs:
-  # Build job
-  build:
+  build-and-deploy:
+    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -38,9 +40,7 @@ jobs:
         with:
           path: |
             .next/cache
-          # Generate a new cache whenever packages or source files change.
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/bun.lockb') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-          # If source files changed but packages didn't, rebuild from a prior cache.
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/bun.lockb') }}-
       - name: Install dependencies
@@ -50,74 +50,14 @@ jobs:
           export IS_PREVIEW=true
           export PR_NUMBER=${{ github.event.pull_request.number }}
           bunx next build
-      - name: Upload artifact
-        id: upload
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          path: ./out
-      - name: Create a version mark
-        run: touch ./out/${{ github.sha }}.txt
-      - name: "[Debug]"
-        run: |
-          echo ${{ steps.upload.outputs.artifact_id }}
-          pwd
-          ls -la
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref }}
-
-      # - name: Create deployment
-      #   uses: bobheadxi/deployments@v1
-      #   id: deployment
-      #   with:
-      #     step: start
-      #     env: PR-${{ env.BRANCH_NAME }}
-
-      - name: Download artifact
-        id: download
-        uses: actions/download-artifact@v4
-        with:
-          name: github-pages
-          path: github-pages-${{ github.sha }}
-      - name: "[Debug]"
-        run: |
-          pwd
-          ls -la
-          cd ${{ steps.download.outputs.download-path }}
-          ls -la
-          cd ..
-      - name: Extract artifact
-        run: |
-          mkdir -p ./out
-          tar -xvf ${{ steps.download.outputs.download-path }}/artifact.tar -C ./out
-      - name: "[Debug]"
-        run: |
-          pwd
-          ls -la ./out
-      - name: Pushing to pages branch
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          folder: ./out
-          branch: gh-pages
-          target-folder: ${{ env.PAGE_DIR }}
-          clean: true
-
-      # - name: Update deployment status
-      #   uses: bobheadxi/deployments@v1
-      #   if: always()
-      #   with:
-      #     step: finish
-      #     status: ${{ job.status }}
-      #     env: ${{ steps.deployment.outputs.env }}
-      #     deployment_id: ${{ steps.deployment.outputs.deployment_id }}
-      #     env_url: https://${{ github.repository_owner }}.github.io/${{ env.PAGE_DIR }}
-
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./out
+          destination_dir: ${{ env.PAGE_DIR }}
+          publish_branch: gh-pages
+          keep_files: true
       - name: Comment PR
         uses: actions/github-script@v7
         with:
@@ -128,3 +68,20 @@ jobs:
               repo: context.repo.repo,
               body: `Preview deployed to: https://${context.repo.owner}.github.io/${process.env.PAGE_DIR}`
             })
+
+  cleanup:
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+      - name: Remove preview directory
+        run: |
+          rm -rf ${{ env.PAGE_DIR }}
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "Remove PR preview for #${{ github.event.pull_request.number }}" || echo "No changes to commit"
+          git push origin gh-pages
