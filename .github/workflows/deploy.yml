@@ -50,9 +50,7 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "action@github.com"
-          git checkout gh-pages
-          git pull origin gh-pages
-          cp -r tmp/out/* .
+          cp -r /tmp/out/* .
           git add .
           git commit -m "Deploy to gh-pages: ${{ github.sha }}"
           git push origin gh-pages
