@@ -53,6 +53,8 @@ jobs:
         run: |
           ls -la
           ls -la out
+      - name: Move out directory
+        run: mv out /tmp/out
       - name: Checkout gh-pages
         uses: actions/checkout@v4
         with:
@@ -60,12 +62,12 @@ jobs:
       - name: "Debug"
         run: |
           ls -la
-          ls -la out
+          ls -la /tmp/out
       - name: Commit changes to gh-pages branch
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "action@github.com"
-          cp -r out/* ${{ env.PAGE_DIR }}
+          cp -r /tmp/out/* ${{ env.PAGE_DIR }}
           git add .
           git commit -m "Deploy PR preview for #${{ github.event.pull_request.number }}"
           git push origin gh-pages
