@@ -53,7 +53,9 @@ jobs:
           find . -maxdepth 1 -type d -name 'pr-preview-*' -exec mv {} /tmp/pr-previews/ \;
           git rm -rf .
           git clean -fxd
-          mv /tmp/pr-previews/* .
+          shopt -s nullglob
+          mv /tmp/pr-previews/* . || true
+          shopt -u nullglob
       - name: Copy new build
         run: |
           cp -r /tmp/out/* .
