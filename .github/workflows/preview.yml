@@ -86,7 +86,7 @@ jobs:
           cd ..
       - name: Extract artifact
         run: |
-          chmod +x ${{ steps.download.outputs.download-path }}/artifact.tar
+          mkdir -p ./out
           tar -xvf ${{ steps.download.outputs.download-path }}/artifact.tar -C ./out
       - name: Pushing to pages branch
         uses: JamesIves/github-pages-deploy-action@v4
