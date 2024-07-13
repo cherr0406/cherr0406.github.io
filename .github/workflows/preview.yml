@@ -80,12 +80,13 @@ jobs:
       - name: "[Debug]"
         run: |
           pwd
-          echo ${{ steps.download.outputs.download-path }}
+          ls -la
           cd ${{ steps.download.outputs.download-path }}
           ls -la
-          cd ~
+          cd ..
       - name: Extract artifact
         run: |
+          chmod +x ${{ steps.download.outputs.download-path }}/artifact.tar
           tar -xvf ${{ steps.download.outputs.download-path }}/artifact.tar -C ./out
       - name: Pushing to pages branch
         uses: JamesIves/github-pages-deploy-action@v4
