@@ -46,11 +46,22 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: gh-pages
+          fetch-depth: 0
+      - name: Preserve pr-preview directories and clear other files
+        run: |
+          mkdir -p /tmp/pr-previews
+          find . -maxdepth 1 -type d -name 'pr-preview-*' -exec mv {} /tmp/pr-previews/ \;
+          git rm -rf .
+          git clean -fxd
+          mv /tmp/pr-previews/* .
+      - name: Copy new build
+        run: |
+          cp -r /tmp/out/* .
+          touch .nojekyll
       - name: Commit changes to gh-pages branch
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "action@github.com"
-          cp -r /tmp/out/* .
           git add .
-          git commit -m "Deploy to gh-pages: ${{ github.sha }}"
+          git diff --staged --quiet || git commit -m "Deploy to gh-pages: ${{ github.sha }}"
           git push origin gh-pages
