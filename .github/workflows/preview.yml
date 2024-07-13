@@ -54,10 +54,10 @@ jobs:
           path: ./out
       - name: Create a version mark
         run: touch ./out/${{ github.sha }}.txt
-      - name: \[Debug\]
+      - name: "[Debug]"
         run: |
           echo ${{ steps.upload.outputs.artifact_id }}
-          echo pwd
+          pwd
           ls -la
 
   deploy:
@@ -76,16 +76,17 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: github-pages
-      - name: \[Debug\]
+          path: github-pages-${{ github.sha }}
+      - name: "[Debug]"
         run: |
-          echo pwd
+          pwd
           echo ${{ steps.download.outputs.download-path }}
           cd ${{ steps.download.outputs.download-path }}
           ls -la
           cd ~
       - name: Extract artifact
         run: |
-          tar -xvf ${{ steps.download.outputs.download-path }}/github-pages.tar.gz -C ./out
+          tar -xvf ${{ steps.download.outputs.download-path }}/artifact.tar -C ./out
       - name: Pushing to pages branch
         uses: JamesIves/github-pages-deploy-action@v4
         with:
