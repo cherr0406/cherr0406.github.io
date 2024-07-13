@@ -40,10 +40,8 @@ jobs:
         run: bun install
       - name: Build with Next.js
         run: bunx next build
-      - name: "Debug"
-        run: |
-          ls -la
-          ls -la out
+      - name: Move out directory
+        run: mv out /tmp/out
       - name: Checkout gh-pages
         uses: actions/checkout@v4
         with:
@@ -54,7 +52,7 @@ jobs:
           git config --global user.email "action@github.com"
           git checkout gh-pages
           git pull origin gh-pages
-          cp -r out/* .
+          cp -r tmp/out/* .
           git add .
           git commit -m "Deploy to gh-pages: ${{ github.sha }}"
           git push origin gh-pages
