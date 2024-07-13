@@ -47,15 +47,19 @@ jobs:
         with:
           ref: gh-pages
           fetch-depth: 0
-      - name: Preserve pr-preview directories and clear other files
+      - name: Preserve specific directories and clear other files
         run: |
-          mkdir -p /tmp/pr-previews
-          find . -maxdepth 1 -type d -name 'pr-preview-*' -exec mv {} /tmp/pr-previews/ \;
+          mkdir -p /tmp/preserve
+          find . -maxdepth 1 -type d -name 'pr-preview-*' -exec cp -r {} /tmp/preserve/ \;
+          if [ -d .github/workflows ]; then
+            mkdir -p /tmp/preserve/.github
+            cp -r .github/workflows /tmp/preserve/.github/
+          fi
           git rm -rf .
           git clean -fxd
-          shopt -s nullglob
-          mv /tmp/pr-previews/* . || true
-          shopt -u nullglob
+          shopt -s dotglob nullglob
+          mv /tmp/preserve/* . || true
+          shopt -u dotglob nullglob
       - name: Copy new build
         run: |
           cp -r /tmp/out/* .
