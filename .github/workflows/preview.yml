@@ -49,12 +49,13 @@ jobs:
           export IS_PREVIEW=true
           export PR_NUMBER=${{ github.event.pull_request.number }}
           bunx next build
+      - uses: actions/checkout@v4
+        with:
+          ref: gh-pages
       - name: Commit changes to gh-pages branch
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "action@github.com"
-          git checkout gh-pages
-          git pull origin gh-pages
           cp -r out/* ${{ env.PAGE_DIR }}
           git add .
           git commit -m "Deploy PR preview for #${{ github.event.pull_request.number }}"

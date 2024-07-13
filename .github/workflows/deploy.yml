@@ -40,6 +40,9 @@ jobs:
         run: bun install
       - name: Build with Next.js
         run: bunx next build
+      - uses: actions/checkout@v4
+        with:
+          ref: gh-pages
       - name: Commit changes to gh-pages branch
         run: |
           git config --global user.name "GitHub Actions"
