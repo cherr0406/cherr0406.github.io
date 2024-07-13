@@ -46,7 +46,10 @@ jobs:
       - name: Install dependencies
         run: bun install
       - name: Build with Next.js
-        run: bunx next build
+        run: |
+          export IS_PREVIEW=true
+          export PR_NUMBER=${{ github.event.pull_request.number }}
+          bunx next build
       - name: Upload artifact
         id: upload
         uses: actions/upload-pages-artifact@v3
