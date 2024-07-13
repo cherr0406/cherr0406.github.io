@@ -14,7 +14,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  PAGE_DIR: pr-preview-${{ github.event.pull_request.number }}-${{ github.sha }}
+  PAGE_DIR: pr-preview-${{ github.event.pull_request.number }}
 
 jobs:
   # Build job
