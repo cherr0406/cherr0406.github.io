@@ -52,7 +52,7 @@ jobs:
       - name: Commit changes to gh-pages branch
         run: |
           git config --global user.name "GitHub Actions"
-          git config --global user.email "
+          git config --global user.email "action@github.com"
           git checkout gh-pages
           git pull origin gh-pages
           cp -r out/* ${{ env.PAGE_DIR }}
