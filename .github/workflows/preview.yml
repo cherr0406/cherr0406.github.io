@@ -68,7 +68,7 @@ jobs:
       - name: Pushing to pages branch
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: build
+          folder: ./out
           branch: ${{ env.BRANCH_NAME }}
           target-folder: pr-preview-${{ github.event.pull_request.number }}-${{ github.sha }}
           clean: true
