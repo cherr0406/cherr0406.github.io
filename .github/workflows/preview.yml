@@ -2,9 +2,7 @@ name: Deploy PR previews
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
-  pull_request_target:
-    types: [closed]
+    types: [opened, synchronize, reopened, closed]
 
 permissions:
   contents: write
@@ -84,9 +82,9 @@ jobs:
           ref: gh-pages
       - name: Remove preview directory
         run: |
-          rm -rf ${{ env.PAGE_DIR }}
+          rm -rf ${{ env.PAGE_DIR }} || exit 0
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
-          git commit -m "Remove PR preview for #${{ github.event.pull_request.number }}" || echo "No changes to commit"
+          git commit -m "Remove PR preview for #${{ github.event.pull_request.number }}"
           git push origin gh-pages

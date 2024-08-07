@@ -46,8 +46,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: gh-pages
-          fetch-depth: 0
-      - name: Preserve specific directories and clear other files
+      - name: Preserve specific directories
         run: |
           mkdir -p /tmp/preserve
           find . -maxdepth 1 -type d -name 'pr-preview-*' -exec cp -r {} /tmp/preserve/ \;
@@ -55,6 +54,8 @@ jobs:
             mkdir -p /tmp/preserve/.github
             cp -r .github/workflows /tmp/preserve/.github/
           fi
+      - name: Clean gh-pages branch
+        run: |
           git rm -rf .
           git clean -fxd
           shopt -s dotglob nullglob
@@ -63,11 +64,16 @@ jobs:
       - name: Copy new build
         run: |
           cp -r /tmp/out/* .
-          touch .nojekyll
+          touch .nojekyll || true
       - name: Commit changes to gh-pages branch
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "action@github.com"
-          git add .
-          git diff --staged --quiet || git commit -m "Deploy to gh-pages: ${{ github.sha }}"
-          git push origin gh-pages
+          git add -N .
+          set +e
+          git diff --exit-code --quiet
+          if [[ $? -eq 1 ]]; then
+            git add .
+            git commit -m "Deploy to gh-pages: ${{ github.sha }}"
+            git push origin gh-pages
+          fi
