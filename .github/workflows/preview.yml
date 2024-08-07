@@ -57,6 +57,7 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "action@github.com"
+          mkdir -p ${{ env.PAGE_DIR }}
           cp -r /tmp/out/* ${{ env.PAGE_DIR }}
           git add .
           git commit -m "Deploy PR preview for #${{ github.event.pull_request.number }}"
