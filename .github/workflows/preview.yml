@@ -86,5 +86,4 @@ jobs:
           git config user.name github-actions
           git config user.email github-actions@github.com
           git add .
-          git commit -m "Remove PR preview for #${{ github.event.pull_request.number }}"
-          git push origin gh-pages
+            git commit -m "Remove PR preview for #${{ github.event.pull_request.number }}" && git push origin gh-pages || echo "No changes to commit"
