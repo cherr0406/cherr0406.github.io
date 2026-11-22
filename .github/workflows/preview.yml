@@ -63,7 +63,7 @@ jobs:
           git commit -m "Deploy PR preview for #${{ github.event.pull_request.number }}"
           git push origin gh-pages
       - name: Comment PR
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             github.rest.issues.createComment({
